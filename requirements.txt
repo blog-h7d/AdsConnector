@@ -1,3 +1,4 @@
 quart
 pyads
 pytest
+pytest-asyncio

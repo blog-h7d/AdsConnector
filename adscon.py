@@ -15,10 +15,13 @@ class AdsConnector:
             adr = pyads.AmsAddr(server_amsnetid, int(port))
             pyads.add_route(adr, server_address)
 
-        self._plc = pyads.Connection(server_amsnetid, int(port))
+        if server_address and server_amsnetid and port:
+            self._plc = pyads.Connection(server_amsnetid, int(port))
+
         self._actServer = server_address
         self._actAMsId = server_amsnetid
         self._actPort = port
+
 
     def _re_initialize(self):
         if self._actPort:

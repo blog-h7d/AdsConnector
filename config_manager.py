@@ -42,7 +42,7 @@ class ConfigManager:
     async def _write_config_file(self, config_data):
         config_file_path = self.get_config_file_path()
         with open(config_file_path, "w") as config_file:
-            config_file.write(quart.json.dumps(config_data))
+            config_file.write(quart.json.dumps(config_data, indent=2))
             config_file.flush()
             config_file.close()
 

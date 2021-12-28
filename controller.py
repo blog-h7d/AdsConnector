@@ -14,10 +14,11 @@ config = config_manager.ConfigManager()
 
 @app.before_serving
 async def start_server():
-    connection.initialize(await config.get_config_value("adsserver"),
-                          await config.get_config_value("amsnetid"),
-                          await config.get_config_value("port")
-                          )
+    connection.initialize(
+        server_address=await config.get_config_value("adsserver"),
+        server_amsnetid=await config.get_config_value("amsnetid"),
+        port=await config.get_config_value("port")
+    )
 
 
 @app.route('/connection/check/')
@@ -27,7 +28,6 @@ async def check_connection():
     except pyads.ADSError as ads_error:
         data = ads_error
     return '{"data":"' + str(data) + '"}'
-
 
 
 @app.route('/connection/save/', methods=['POST'])

@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install make
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-RUN cd adslib && make && make install
+COPY adslib/adslib.so adslib.so
 
 RUN apt-get remove make -y && apt autoremove && apt clean
 

@@ -16,8 +16,8 @@ async def init_config_file(delete_act_config=False):
                 "adsserver": "",
                 "amsnetid": "",
                 "port": "851",
-                "commands": dict(),
-                "writecommands": dict()
+                "commands": list(),
+                "writecommands": list()
             }
             config_file.write(quart.json.dumps(default_data))
 

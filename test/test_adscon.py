@@ -1,3 +1,8 @@
+# pylint: disable=W0212
+# pylint: disable=W0613
+# pylint: disable=W0621
+# pylint: disable=W0622
+
 import pyads
 import pytest
 
@@ -9,7 +14,7 @@ def get_server_ip():
 
 
 def test_pyads_installed_correctly():
-    plc = pyads.Connection(get_server_ip() + ".1.1", 851)
+    pyads.Connection(get_server_ip() + ".1.1", 851)
     pyads.open_port()
 
 

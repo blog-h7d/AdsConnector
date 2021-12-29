@@ -13,8 +13,7 @@ class ConfigManager:
 
         do_re_init = not os.path.exists(config_file_path) or delete_act_config
         if not do_re_init:
-            with open(config_file_path) as file:
-                do_re_init = file.readlines() == ""
+            do_re_init = os.path.getsize(config_file_path) == 0
 
         if do_re_init:
             if os.path.exists(config_file_path):

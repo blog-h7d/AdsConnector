@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block header %}
+    <script>
+        function testfunction() {
+            var opts = {
+                method: 'GET',
+                headers: {}
+            };
+            fetch('/connection/check/')
+                .then((resp) => resp.json())
+                .then(function (data) {
+                    alert(data.data)
+                });
+        }
+
+        function checkcommand(id) {
+            var opts = {
+                method: 'GET',
+                headers: {}
+            };
+            fetch('/command/check/' + id)
+                .then((resp) => resp.json())
+                .then(function (data) {
+                    alert(data.data)
+                });
+        }
+
+    </script>
+{% endblock %}
+{% block content %}
+    <h2>Remote Server Configuration</h2>
+    <form method="POST" action="/connection/save/">
+        <table>
+            <tr>
+                <td>Remote Server IP:</td>
+                <td><input name="server_ip" value="{{ data.server_ip }}"/></td>
+            </tr>
+            <tr>
+                <td>Remote AMS Net ID:</td>
+                <td><input name="amsnetid" value="{{ data.amsnetid }}"/></td>
+            </tr>
+            <tr>
+                <td>Port:</td>
+                <td><input name="port" value="{{ data.port }}"/></td>
+            </tr>
+        </table>
+        <button type="submit">Absenden</button>
+    </form>
+    <input type="button" value="Check actual config" onclick="testfunction()"/>
+
+    <h2>ADS Command Config</h2>
+    <form method="POST" action="/adscommands">
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Command</th>
+                <th>Group</th>
+                <th>Type</th>
+                <th></th>
+            </tr>
+            {% for i in range(commands|length) %}
+                <tr>
+                    <td><input name="{{ i }}-ID" value="{{ commands[i].id }}"/></td>
+                    <td><input name="{{ i }}-Command" value="{{ commands[i].command }}"/></td>
+                    <td><input name="{{ i }}-Group" value="{{ commands[i].group }}"/></td>
+                    <td><select name="{{ i }}-Type" value="{{ commands[i].type }}">
+                        <option value="PLCTYPE_BOOL">BOOL</option>
+                        <option value="PLCTYPE_BYTE">BYTE</option>
+                        <option value="PLCTYPE_INT" selected>INT</option>
+                        <option value="PLCTYPE_STRING">STRING</option>
+                    </select></td>
+                    <td><input type="button" value="Check command" onclick="checkcommand('{{ commands[i].id }}')"/></td>
+                </tr>
+            {% endfor %}
+            {% for i in range(commands|length, commands|length + 2) %}
+                <tr>
+                    <td><input name="{{ i }}-ID" value=""/></td>
+                    <td><input name="{{ i }}-Command" value=""/></td>
+                    <td><input name="{{ i }}-Group" value=""/></td>
+                    <td><select name="{{ i }}-Type" value="">
+                        <option value="PLCTYPE_BOOL">BOOL</option>
+                        <option value="PLCTYPE_BYTE ">BYTE</option>
+                        <option value="PLCTYPE_INT" selected>INT</option>
+                        <option value="PLCTYPE_STRING">STRING</option>
+                    </select></td>
+                </tr>
+            {% endfor %}
+        </table>
+        <button type="submit">Absenden</button>
+    </form>
+{% endblock %}
+</body>
+</html>

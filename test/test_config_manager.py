@@ -1,3 +1,8 @@
+# pylint: disable=W0212
+# pylint: disable=W0613
+# pylint: disable=W0621
+# pylint: disable=W0622
+
 import json
 
 import pytest
@@ -13,13 +18,13 @@ class TestConfigManager:
         assert cm
 
     @pytest.mark.asyncio
-    async def test_get_config_data(self):
+    async def test_get_config_value(self):
         cm = config_manager.ConfigManager(True)
         value = await cm.get_config_value('adsserver')
         assert isinstance(value, str)
 
     @pytest.mark.asyncio
-    async def test_get_invalid_config_data(self):
+    async def test_get_invalid_config_value(self):
         cm = config_manager.ConfigManager(True)
         with pytest.raises(ValueError):
             await cm.get_config_value('host')
@@ -43,7 +48,7 @@ class TestConfigManager:
         await cm.save_entry('adsserver', '192.168.0.1')
 
         fp = cm.get_config_file_path()
-        with open(fp) as json_file:
+        with open(fp, encoding="utf-8") as json_file:
             data = json.load(json_file)
 
         assert 'adsserver' in data

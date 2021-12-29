@@ -48,9 +48,9 @@ async def save_connection():
     return quart.redirect('/')
 
 
-@app.route('/command/check/<id>/')
-async def check_command(id: str):
-    return ''
+@app.route('/command/check/<identifier>/')
+async def check_command(identifier: str):
+    return identifier
 
 
 @app.route("/")

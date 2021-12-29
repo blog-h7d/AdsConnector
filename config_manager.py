@@ -10,7 +10,13 @@ class ConfigManager:
 
     def __init__(self, delete_act_config=False):
         config_file_path = self.get_config_file_path()
-        if not os.path.exists(config_file_path) or delete_act_config:
+
+        do_re_init = not os.path.exists(config_file_path) or delete_act_config
+        if not do_re_init:
+            with open(config_file_path) as file:
+                do_re_init = file.readlines() == ""
+
+        if do_re_init:
             if os.path.exists(config_file_path):
                 os.remove(config_file_path)
 

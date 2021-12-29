@@ -16,9 +16,6 @@ class ConfigManager:
             do_re_init = os.path.getsize(config_file_path) == 0
 
         if do_re_init:
-            if os.path.exists(config_file_path):
-                os.remove(config_file_path)
-
             with open(config_file_path, "w") as config_file:
                 default_data = {
                     "adsserver": "",

@@ -54,5 +54,5 @@ class ConfigManager:
         await self._write_config_file(data)
 
     @staticmethod
-    def get_config_file_path():
+    def get_config_file_path() -> str:
         return CONFIG_FILE_PATH

@@ -7,8 +7,9 @@ import config_manager
 app = quart.Quart(__name__)
 # TODO: Make this accessible from Docker
 app.secret_key = "AppForPyADS_ChangeForUsage"
+app.register_blueprint(adscon.page.commands_page)
 
-connection = adscon.AdsConnector()
+connection = adscon.connector.AdsConnector()
 config = config_manager.ConfigManager()
 
 
@@ -48,9 +49,6 @@ async def save_connection():
     return quart.redirect('/')
 
 
-@app.route('/command/check/<identifier>/')
-async def check_command(identifier: str):
-    return identifier
 
 
 @app.route("/")

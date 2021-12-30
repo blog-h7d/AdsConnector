@@ -10,6 +10,7 @@ app = quart.Quart(__name__)
 app.secret_key = "AppForPyADS_ChangeForUsage"
 app.register_blueprint(adscon.page.commands_page)
 
+connection = adscon.connector.AdsConnector()
 config = config_manager.ConfigManager()
 
 
@@ -52,6 +53,8 @@ async def save_connection():
     adscon.page.connection.initialize(server_ip, amsnetid, port)
 
     return quart.redirect('/')
+
+
 
 
 @app.route("/")

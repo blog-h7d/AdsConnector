@@ -15,7 +15,7 @@ async def save_commands():
         key = f'{index}-ID'
         return key in form_data and form_data.get(key, "")
 
-    values = list()
+    values = []
 
     act_index = 0
     while found_in_data(act_index):

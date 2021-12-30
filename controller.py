@@ -55,8 +55,6 @@ async def save_connection():
     return quart.redirect('/')
 
 
-
-
 @app.route("/")
 async def main():
     data = {

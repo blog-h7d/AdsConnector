@@ -16,19 +16,19 @@ class ConfigManager:
             do_re_init = os.path.getsize(config_file_path) == 0
 
         if do_re_init:
-            with open(config_file_path, "w") as config_file:
+            with open(config_file_path, "w", encoding="utf-8") as config_file:
                 default_data = {
                     "adsserver": "",
                     "amsnetid": "",
                     "port": "851",
-                    "commands": list(),
-                    "writecommands": list()
+                    "commands": [],
+                    "writecommands": []
                 }
                 config_file.write(quart.json.dumps(default_data))
 
     async def get_config_data(self):
         config_file_path = self.get_config_file_path()
-        with open(config_file_path) as config_file:
+        with open(config_file_path, encoding="utf-8") as config_file:
             return quart.json.load(config_file)
 
     async def get_config_value(self, key: str, default: str = None):
@@ -43,7 +43,7 @@ class ConfigManager:
 
     async def _write_config_file(self, config_data):
         config_file_path = self.get_config_file_path()
-        with open(config_file_path, "w") as config_file:
+        with open(config_file_path, "w", encoding="utf-8") as config_file:
             config_file.write(quart.json.dumps(config_data, indent=2))
             config_file.flush()
             config_file.close()
@@ -54,5 +54,5 @@ class ConfigManager:
         await self._write_config_file(data)
 
     @staticmethod
-    def get_config_file_path():
+    def get_config_file_path() -> str:
         return CONFIG_FILE_PATH

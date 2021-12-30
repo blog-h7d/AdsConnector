@@ -1,10 +1,12 @@
 import quart
 
+import adscon
 import config_manager
 
 commands_page = quart.Blueprint('command', 'command', url_prefix='/command/')
 
 config = config_manager.ConfigManager()
+connection = adscon.connector.AdsConnector()
 
 
 @commands_page.route('save/', methods=['POST'])
@@ -36,4 +38,10 @@ async def save_commands():
 
 @commands_page.route('check/<identifier>/')
 async def check_command(identifier: str):
-    return identifier
+    commands = await config.get_config_value('commands')
+    for command in commands:
+        if command['identifier'] == identifier:
+            data = connection.send_ads_read_command(command['command'], command['group'], command['type'])
+            return {'data': data}
+
+    quart.abort(404)

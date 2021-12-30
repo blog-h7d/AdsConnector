@@ -16,6 +16,7 @@ def get_server_ip():
 def mock_add_route(*args):
     pass
 
+
 class MockConnection:
     def __init__(self, amsnet_id, port):
         pass

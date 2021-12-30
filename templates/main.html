@@ -18,7 +18,7 @@
                 method: 'GET',
                 headers: {}
             };
-            fetch('/command/check/' + id)
+            fetch('/command/check/' + id + '/')
                 .then((resp) => resp.json())
                 .then(function (data) {
                     alert(data.data)

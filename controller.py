@@ -9,13 +9,12 @@ app = quart.Quart(__name__)
 app.secret_key = "AppForPyADS_ChangeForUsage"
 app.register_blueprint(adscon.page.commands_page)
 
-connection = adscon.connector.AdsConnector()
 config = config_manager.ConfigManager()
 
 
 @app.before_serving
 async def start_server():
-    connection.initialize(
+    adscon.page.connection.initialize(
         server_address=await config.get_config_value("adsserver"),
         server_amsnetid=await config.get_config_value("amsnetid"),
         port=await config.get_config_value("port")
@@ -25,7 +24,7 @@ async def start_server():
 @app.route('/connection/check/')
 async def check_connection():
     try:
-        data = connection.check_connection()
+        data = adscon.page.connection.check_connection()
     except pyads.ADSError as ads_error:
         data = ads_error
     return '{"data":"' + str(data) + '"}'
@@ -44,7 +43,7 @@ async def save_connection():
     port = form.get('port')
     await config.save_entry('port', port)
 
-    connection.initialize(server_ip, amsnetid, port)
+    adscon.page.connection.initialize(server_ip, amsnetid, port)
 
     return quart.redirect('/')
 

@@ -17,6 +17,7 @@ def _test_app():
 
 
 def mock_get_file_path(obj=None):
+    print(os.path.dirname(__file__))
     return os.path.abspath(os.path.join(os.path.dirname(__file__), "config.json"))
 
 

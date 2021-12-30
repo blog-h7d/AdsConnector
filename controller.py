@@ -10,7 +10,6 @@ app = quart.Quart(__name__)
 app.secret_key = "AppForPyADS_ChangeForUsage"
 app.register_blueprint(adscon.page.commands_page)
 
-connection = adscon.connector.AdsConnector()
 config = config_manager.ConfigManager()
 
 

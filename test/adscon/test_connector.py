@@ -13,6 +13,9 @@ def get_server_ip():
     return '192.168.0.1'
 
 
+def mock_add_route(*args):
+    pass
+
 class MockConnection:
     def __init__(self, amsnet_id, port):
         pass
@@ -42,13 +45,16 @@ def test_check_connection(monkeypatch):
     server_ip = get_server_ip()
 
     monkeypatch.setattr(pyads, "Connection", MockConnection)
+    monkeypatch.setattr(pyads, "add_route", mock_add_route)
 
     connector = adscon.connector.AdsConnector()
     connector.initialize(server_ip, server_ip + ".1.1", 851)
     assert connector.check_connection(), "Failed to connect to AMSNetId: " + server_ip + ".1.1"
 
 
-def test_check_no_connection():
+def test_check_no_connection(monkeypatch):
+    monkeypatch.setattr(pyads, "add_route", mock_add_route)
+
     server_ip = "192.168.47.3"  # invalid ip should be used
     connector = adscon.connector.AdsConnector()
     connector.initialize(server_ip, server_ip + ".1.1", 851)

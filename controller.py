@@ -49,15 +49,13 @@ async def save_connection():
     return quart.redirect('/')
 
 
-
-
 @app.route("/")
 async def main():
     data = {
         'server_ip': await config.get_config_value('adsserver'),
         'amsnetid': await config.get_config_value('amsnetid'),
         'port': await config.get_config_value('port', default='851'),
-        'commands': await config.get_config_value('commands'),
+        'commands': await config.get_config_value('commands', default=[]),
     }
 
     return await quart.render_template('main.html', data=data)

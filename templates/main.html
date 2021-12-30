@@ -58,21 +58,21 @@
                 <th>Type</th>
                 <th></th>
             </tr>
-            {% for i in range(commands|length) %}
+            {% for i in range(data.commands|length) %}
                 <tr>
-                    <td><input name="{{ i }}-ID" value="{{ commands[i].id }}"/></td>
-                    <td><input name="{{ i }}-Command" value="{{ commands[i].command }}"/></td>
-                    <td><input name="{{ i }}-Group" value="{{ commands[i].group }}"/></td>
-                    <td><select name="{{ i }}-Type" value="{{ commands[i].type }}">
+                    <td><input name="{{ i }}-ID" value="{{ data.commands[i].identifier }}"/></td>
+                    <td><input name="{{ i }}-Command" value="{{ data.commands[i].command }}"/></td>
+                    <td><input name="{{ i }}-Group" value="{{ data.commands[i].group }}"/></td>
+                    <td><select name="{{ i }}-Type" value="{{ data.commands[i].type }}">
                         <option value="PLCTYPE_BOOL">BOOL</option>
                         <option value="PLCTYPE_BYTE">BYTE</option>
                         <option value="PLCTYPE_INT" selected>INT</option>
                         <option value="PLCTYPE_STRING">STRING</option>
                     </select></td>
-                    <td><input type="button" value="Check command" onclick="checkcommand('{{ commands[i].id }}')"/></td>
+                    <td><input type="button" value="Check command" onclick="checkcommand('{{ data.commands[i].identifier }}')"/></td>
                 </tr>
             {% endfor %}
-            {% for i in range(commands|length, commands|length + 2) %}
+            {% for i in range(data.commands|length, data.commands|length + 2) %}
                 <tr>
                     <td><input name="{{ i }}-ID" value=""/></td>
                     <td><input name="{{ i }}-Command" value=""/></td>

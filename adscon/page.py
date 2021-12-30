@@ -26,6 +26,7 @@ async def save_commands():
                 'identifier': form_data.get(f'{act_index}-ID'),
                 'command': form_data.get(f'{act_index}-Command'),
                 'group': form_data.get(f'{act_index}-Group'),
+                'default': form_data.get(f'{act_index}-Default'),
                 'type': form_data.get(f'{act_index}-Type')
             }
         )
@@ -41,6 +42,8 @@ async def check_command(identifier: str):
     commands = await config.get_config_value('commands')
     for command in commands:
         if command['identifier'] == identifier:
+            if command['group'] == 'default':
+                command['group'] = command['default']
             data = connection.send_ads_read_command(command['command'], command['group'], command['type'])
             return {'data': data}
 

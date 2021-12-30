@@ -1,3 +1,4 @@
+import markupsafe
 import pyads
 import quart
 
@@ -10,6 +11,11 @@ app.secret_key = "AppForPyADS_ChangeForUsage"
 app.register_blueprint(adscon.page.commands_page)
 
 config = config_manager.ConfigManager()
+
+
+@app.template_filter('option')
+def filter_option(value, data):
+    return markupsafe.Markup(f'value="{value}" ' + ("selected" if value == data else ""))
 
 
 @app.before_serving

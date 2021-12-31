@@ -81,3 +81,119 @@ async def test_check_command(test_app, monkeypatch):
 
     assert result.status_code == 200
     assert called
+
+
+@pytest.mark.asyncio
+async def test_check_command_default(test_app, monkeypatch):
+    monkeypatch.setattr(config_manager.ConfigManager, 'get_config_file_path', mock_get_file_path)
+    controller.config = config_manager.ConfigManager()
+
+    await controller.config.save_entry('commands', [{
+        'identifier': '1234',
+        'command': '0x80000001',
+        'group': 'default',
+        'default': '1234',
+        'type': 'PLCTYPE_INT'
+    }])
+
+    called = False
+
+    def mock_send_read(_, command, group, return_type):
+        nonlocal called
+        called = True
+        assert command == '0x80000001'
+        assert group == '1234'
+
+    monkeypatch.setattr(adscon.connector.AdsConnector, 'send_ads_read_command', mock_send_read)
+
+    result = await test_app.get('/command/check/1234/')
+
+    assert result.status_code == 200
+    assert called
+
+
+@pytest.mark.asyncio
+async def test_run_command(test_app, monkeypatch):
+    monkeypatch.setattr(config_manager.ConfigManager, 'get_config_file_path', mock_get_file_path)
+    controller.config = config_manager.ConfigManager()
+
+    await controller.config.save_entry('commands', [{
+        'identifier': '1234',
+        'command': '0x80000001',
+        'group': '123',
+        'default': '5678',
+        'type': 'PLCTYPE_INT'
+    }])
+
+    called = False
+
+    def mock_send_read(_, command, group, return_type):
+        nonlocal called
+        called = True
+        assert command == '0x80000001'
+        assert group == '123'
+
+    monkeypatch.setattr(adscon.connector.AdsConnector, 'send_ads_read_command', mock_send_read)
+
+    result = await test_app.get('/command/run/1234/')
+
+    assert result.status_code == 200
+    assert called
+
+
+@pytest.mark.asyncio
+async def test_run_command_default(test_app, monkeypatch):
+    monkeypatch.setattr(config_manager.ConfigManager, 'get_config_file_path', mock_get_file_path)
+    controller.config = config_manager.ConfigManager()
+
+    await controller.config.save_entry('commands', [{
+        'identifier': '1234',
+        'command': '0x80000001',
+        'group': 'default',
+        'default': '5678',
+        'type': 'PLCTYPE_INT'
+    }])
+
+    called = False
+
+    def mock_send_read(_, command, group, return_type):
+        nonlocal called
+        called = True
+        assert command == '0x80000001'
+        assert group == '345'
+
+    monkeypatch.setattr(adscon.connector.AdsConnector, 'send_ads_read_command', mock_send_read)
+
+    result = await test_app.get('/command/run/1234/?groups=345')
+
+    assert result.status_code == 200
+    assert called
+
+
+@pytest.mark.asyncio
+async def test_run_command_defaults(test_app, monkeypatch):
+    monkeypatch.setattr(config_manager.ConfigManager, 'get_config_file_path', mock_get_file_path)
+    controller.config = config_manager.ConfigManager()
+
+    await controller.config.save_entry('commands', [{
+        'identifier': '1234',
+        'command': '0x80000001',
+        'group': 'default',
+        'default': '5678',
+        'type': 'PLCTYPE_INT'
+    }])
+
+    called = 0
+
+    def mock_send_read(_, command, group, return_type):
+        nonlocal called
+        called += 1
+        assert command == '0x80000001'
+        assert group in ('345', '346', '347')
+
+    monkeypatch.setattr(adscon.connector.AdsConnector, 'send_ads_read_command', mock_send_read)
+
+    result = await test_app.get('/command/run/1234/?groups=345,346,347')
+
+    assert result.status_code == 200
+    assert called == 3

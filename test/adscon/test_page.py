@@ -200,7 +200,7 @@ async def test_run_command_defaults(test_app, monkeypatch):
 
 
 @pytest.mark.asyncio
-async def test_save_commands_simple(test_app, monkeypatch):
+async def test_save_exec_commands_simple(test_app, monkeypatch):
     monkeypatch.setattr(config_manager.ConfigManager, 'get_config_file_path', mock_get_file_path)
     controller.config = config_manager.ConfigManager()
 

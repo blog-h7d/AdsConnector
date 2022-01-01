@@ -101,8 +101,11 @@ async def check_exec_command(identifier: str):
     commands = await config.get_config_value('writecommands')
     for command in commands:
         if command['identifier'] == identifier:
+            group = command['group']
+            if group == 'default':
+                group = command['default']
             data = connection.send_ads_write_command(command['command'],
-                                                     command['group'],
+                                                     group,
                                                      command['type'],
                                                      command['defaultValue'])
             return {'data': data}

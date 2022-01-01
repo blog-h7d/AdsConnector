@@ -252,3 +252,35 @@ async def test_check_exec_command(test_app, monkeypatch):
 
     assert result.status_code == 200
     assert called
+
+
+@pytest.mark.asyncio
+async def test_check_exec_command_default(test_app, monkeypatch):
+    monkeypatch.setattr(config_manager.ConfigManager, 'get_config_file_path', mock_get_file_path)
+    controller.config = config_manager.ConfigManager()
+
+    await controller.config.save_entry('writecommands', [{
+        'identifier': '1234',
+        'command': '0x80000001',
+        'group': 'default',
+        'default': '123',
+        'type': 'PLCTYPE_INT',
+        'defaultValue': 1
+    }])
+
+    called = False
+
+    def mock_send_write(_, command, group, value_type, value):
+        nonlocal called
+        called = True
+        assert command == '0x80000001'
+        assert group == '123'
+        assert value_type == 'PLCTYPE_INT'
+        assert value == 1
+
+    monkeypatch.setattr(adscon.connector.AdsConnector, 'send_ads_write_command', mock_send_write)
+
+    result = await test_app.get('/command/exec/check/1234/')
+
+    assert result.status_code == 200
+    assert called

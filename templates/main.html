@@ -13,12 +13,24 @@
                 });
         }
 
-        function checkcommand(id) {
+        function checkCommand(id) {
             var opts = {
                 method: 'GET',
                 headers: {}
             };
             fetch('/command/check/' + id + '/')
+                .then((resp) => resp.json())
+                .then(function (data) {
+                    alert(data.data)
+                });
+        }
+
+        function checkExecCommand(id) {
+            var opts = {
+                method: 'GET',
+                headers: {}
+            };
+            fetch('/command/exec/check/' + id + '/')
                 .then((resp) => resp.json())
                 .then(function (data) {
                     alert(data.data)
@@ -75,7 +87,7 @@
                         <option {{ "PLCTYPE_WORD"|option(data.commands[i].type) }}>WORD</option>
                     </select></td>
                     <td><input type="button" value="Check command"
-                               onclick="checkcommand('{{ data.commands[i].identifier }}')"/></td>
+                               onclick="checkCommand('{{ data.commands[i].identifier }}')"/></td>
                 </tr>
             {% endfor %}
             {% for i in range(data.commands|length, data.commands|length + 2) %}
@@ -129,7 +141,7 @@
                     </select></td>
                     <td><input name="{{ i }}-DefaultValue" value="{{ data.commands[i].defaultValue }}"/></td>
                     <td><input type="button" value="Check command"
-                               onclick="checkcommand('{{ data.commands[i].identifier }}')"/></td>
+                               onclick="checkExecCommand('{{ data.commands[i].identifier }}')"/></td>
                 </tr>
             {% endfor %}
             {% for i in range(data.commands|length, data.commands|length + 2) %}

@@ -225,3 +225,30 @@ async def test_save_exec_commands_data(test_app, monkeypatch):
 
     saved_data = await adscon.page.config.get_config_value('writecommands')
     assert saved_data
+
+
+@pytest.mark.asyncio
+async def test_check_exec_command(test_app, monkeypatch):
+    monkeypatch.setattr(config_manager.ConfigManager, 'get_config_file_path', mock_get_file_path)
+    controller.config = config_manager.ConfigManager()
+
+    await controller.config.save_entry('writecommands', [{
+        'identifier': '1234',
+        'command': '0x80000001',
+        'group': '',
+        'type': 'PLCTYPE_INT',
+        'defaultValue': 1
+    }])
+
+    called = False
+
+    def mock_send_write(*args, **kwargs):
+        nonlocal called
+        called = True
+
+    monkeypatch.setattr(adscon.connector.AdsConnector, 'send_ads_write_command', mock_send_write)
+
+    result = await test_app.get('/command/exec/check/1234/')
+
+    assert result.status_code == 200
+    assert called

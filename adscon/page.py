@@ -94,3 +94,17 @@ async def save_exec_commands():
     await config.save_entry('writecommands', values)
 
     return quart.redirect('/')
+
+
+@exec_commands_page.route('check/<identifier>/')
+async def check_exec_command(identifier: str):
+    commands = await config.get_config_value('writecommands')
+    for command in commands:
+        if command['identifier'] == identifier:
+            data = connection.send_ads_write_command(command['command'],
+                                                     command['group'],
+                                                     command['type'],
+                                                     command['defaultValue'])
+            return {'data': data}
+
+    quart.abort(404)

@@ -9,18 +9,18 @@ connection = adscon.connector.AdsConnector()
 commands_page = quart.Blueprint('command', 'command', url_prefix='/command/')
 
 
+def _found_in_data(form_data, index):
+    key = f'{index}-ID'
+    return key in form_data and form_data.get(key, "")
+
+
 @commands_page.route('save/', methods=['POST'])
 async def save_commands():
     form_data = await quart.request.form
 
-    def found_in_data(index):
-        key = f'{index}-ID'
-        return key in form_data and form_data.get(key, "")
-
     values = []
-
     act_index = 0
-    while found_in_data(act_index):
+    while _found_in_data(form_data, act_index):
         values.append(
             {
                 'identifier': form_data.get(f'{act_index}-ID'),
@@ -74,4 +74,23 @@ exec_commands_page = quart.Blueprint('exec_commands', 'exec_commands', url_prefi
 
 @exec_commands_page.route('save/', methods=['POST'])
 async def save_exec_commands():
+    form_data = await quart.request.form
+
+    values = []
+    act_index = 0
+    while _found_in_data(form_data, act_index):
+        values.append(
+            {
+                'identifier': form_data.get(f'{act_index}-ID'),
+                'command': form_data.get(f'{act_index}-Command'),
+                'group': form_data.get(f'{act_index}-Group'),
+                'default': form_data.get(f'{act_index}-Default'),
+                'type': form_data.get(f'{act_index}-Type'),
+                'defaultValue': form_data.get(f'{act_index}-DefaultValue'),
+            }
+        )
+        act_index += 1
+
+    await config.save_entry('writecommands', values)
+
     return quart.redirect('/')

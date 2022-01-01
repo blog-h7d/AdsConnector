@@ -206,3 +206,22 @@ async def test_save_commands_simple(test_app, monkeypatch):
 
     result = await test_app.post('/command/exec/save/')
     assert result.status_code == 302
+
+
+@pytest.mark.asyncio
+async def test_save_exec_commands_data(test_app, monkeypatch):
+    monkeypatch.setattr(config_manager.ConfigManager, 'get_config_file_path', mock_get_file_path)
+    controller.config = config_manager.ConfigManager()
+
+    data = {
+        '0-ID': 'id100',
+        '0-Command': 'command',
+        '0-Group': 'command',
+        '0-Type': 'PLCTYPE_INT',
+        '0-DefaultValue': 'value'
+    }
+    result = await test_app.post('/command/exec/save/', form=data)
+    assert result.status_code == 302
+
+    saved_data = await adscon.page.config.get_config_value('writecommands')
+    assert saved_data

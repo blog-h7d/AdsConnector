@@ -62,6 +62,7 @@ async def main():
         'amsnetid': await config.get_config_value('amsnetid'),
         'port': await config.get_config_value('port', default='851'),
         'commands': await config.get_config_value('commands', default=[]),
+        'writecommands': await config.get_config_value('writecommands', default=[]),
     }
 
     return await quart.render_template('main.html', data=data)

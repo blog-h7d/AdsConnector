@@ -124,27 +124,27 @@
                 <th title="Value for executing test">Default Value</th>
                 <th></th>
             </tr>
-            {% for i in range(data.commands|length) %}
+            {% for i in range(data.writecommands|length) %}
                 <tr>
-                    <td><input name="{{ i }}-ID" value="{{ data.commands[i].identifier }}"/></td>
-                    <td><input name="{{ i }}-Command" value="{{ data.commands[i].command }}"/></td>
-                    <td><input name="{{ i }}-Group" value="{{ data.commands[i].group }}"/></td>
-                    <td><input name="{{ i }}-Default" value="{{ data.commands[i].default }}"/></td>
-                    <td><select name="{{ i }}-Type" value="{{ data.commands[i].type }}">
-                        <option {{ "PLCTYPE_BOOL"|option(data.commands[i].type) }}>BOOL</option>
-                        <option {{ "PLCTYPE_BYTE"|option(data.commands[i].type) }}>BYTE</option>
-                        <option {{ "PLCTYPE_DWORD"|option(data.commands[i].type) }}>DWORD</option>
-                        <option {{ "PLCTYPE_INT"|option(data.commands[i].type) }}>INT</option>
-                        <option {{ "PLCTYPE_REAL"|option(data.commands[i].type) }}>REAL</option>
-                        <option {{ "PLCTYPE_STRING"|option(data.commands[i].type) }}>STRING</option>
-                        <option {{ "PLCTYPE_WORD"|option(data.commands[i].type) }}>WORD</option>
+                    <td><input name="{{ i }}-ID" value="{{ data.writecommands[i].identifier }}"/></td>
+                    <td><input name="{{ i }}-Command" value="{{ data.writecommands[i].command }}"/></td>
+                    <td><input name="{{ i }}-Group" value="{{ data.writecommands[i].group }}"/></td>
+                    <td><input name="{{ i }}-Default" value="{{ data.writecommands[i].default }}"/></td>
+                    <td><select name="{{ i }}-Type" value="{{ data.writecommands[i].type }}">
+                        <option {{ "PLCTYPE_BOOL"|option(data.writecommands[i].type) }}>BOOL</option>
+                        <option {{ "PLCTYPE_BYTE"|option(data.writecommands[i].type) }}>BYTE</option>
+                        <option {{ "PLCTYPE_DWORD"|option(data.writecommands[i].type) }}>DWORD</option>
+                        <option {{ "PLCTYPE_INT"|option(data.writecommands[i].type) }}>INT</option>
+                        <option {{ "PLCTYPE_REAL"|option(data.writecommands[i].type) }}>REAL</option>
+                        <option {{ "PLCTYPE_STRING"|option(data.writecommands[i].type) }}>STRING</option>
+                        <option {{ "PLCTYPE_WORD"|option(data.writecommands[i].type) }}>WORD</option>
                     </select></td>
-                    <td><input name="{{ i }}-DefaultValue" value="{{ data.commands[i].defaultValue }}"/></td>
+                    <td><input name="{{ i }}-DefaultValue" value="{{ data.writecommands[i].defaultValue }}"/></td>
                     <td><input type="button" value="Check command"
-                               onclick="checkExecCommand('{{ data.commands[i].identifier }}')"/></td>
+                               onclick="checkExecCommand('{{ data.writecommands[i].identifier }}')"/></td>
                 </tr>
             {% endfor %}
-            {% for i in range(data.commands|length, data.commands|length + 2) %}
+            {% for i in range(data.writecommands|length, data.writecommands|length + 2) %}
                 <tr>
                     <td><input name="{{ i }}-ID" value=""/></td>
                     <td><input name="{{ i }}-Command" value=""/></td>
@@ -159,6 +159,7 @@
                         <option value="PLCTYPE_STRING">STRING</option>
                         <option value="PLCTYPE_WORD" selected>WORD</option>
                     </select></td>
+                    <td><input name="{{ i }}-DefaultValue" value=""/></td>
                 </tr>
             {% endfor %}
         </table>

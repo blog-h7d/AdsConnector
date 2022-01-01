@@ -9,6 +9,7 @@ app = quart.Quart(__name__)
 # TODO: Make this accessible from Docker
 app.secret_key = "AppForPyADS_ChangeForUsage"
 app.register_blueprint(adscon.page.commands_page)
+app.register_blueprint(adscon.page.exec_commands_page)
 
 config = config_manager.ConfigManager()
 

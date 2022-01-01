@@ -3,10 +3,10 @@ import quart
 import adscon
 import config_manager
 
-commands_page = quart.Blueprint('command', 'command', url_prefix='/command/')
-
 config = config_manager.ConfigManager()
 connection = adscon.connector.AdsConnector()
+
+commands_page = quart.Blueprint('command', 'command', url_prefix='/command/')
 
 
 @commands_page.route('save/', methods=['POST'])
@@ -67,3 +67,11 @@ async def run_command(identifier: str):
             return results
 
     quart.abort(404)
+
+
+exec_commands_page = quart.Blueprint('exec_commands', 'exec_commands', url_prefix='/command/exec/')
+
+
+@exec_commands_page.route('save/', methods=['POST'])
+async def save_exec_commands():
+    return quart.redirect('/')

@@ -197,3 +197,12 @@ async def test_run_command_defaults(test_app, monkeypatch):
 
     assert result.status_code == 200
     assert called == 3
+
+
+@pytest.mark.asyncio
+async def test_save_commands_simple(test_app, monkeypatch):
+    monkeypatch.setattr(config_manager.ConfigManager, 'get_config_file_path', mock_get_file_path)
+    controller.config = config_manager.ConfigManager()
+
+    result = await test_app.post('/command/exec/save/')
+    assert result.status_code == 302

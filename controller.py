@@ -1,3 +1,5 @@
+import argparse
+
 import markupsafe
 import pyads
 import quart
@@ -69,4 +71,8 @@ async def main():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', debug=True)
+    parser = argparse.ArgumentParser(description="Webservice for converting ADS commands to REST API")
+    parser.add_argument("-p", type=int, dest="port", default=8000, help="Port for the web service")
+    args = parser.parse_args()
+
+    app.run(host='0.0.0.0', port=args.port, debug=True)

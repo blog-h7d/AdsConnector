@@ -114,7 +114,7 @@ async def check_exec_command(identifier: str):
 
 
 @exec_commands_page.route('run/<identifier>/<value>/', methods=['GET'])
-async def run_command(identifier: str, value: str):
+async def run_exec_command(identifier: str, value: str):
     commands = await config.get_config_value('writecommands')
     results = {}
     for command in commands:

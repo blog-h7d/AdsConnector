@@ -82,7 +82,7 @@ class AdsConnector:
         ads_type = self._parse_ads_type(ads_type)
 
         self._plc.open()
-        self._plc.write(int(ads_index_group, 0), int(ads_index_offset, 0), self._parse_data(type, data), ads_type)
+        self._plc.write(int(ads_index_group, 0), int(ads_index_offset, 0), self._parse_data(ads_type, data), ads_type)
         self._plc.close()
 
         return True

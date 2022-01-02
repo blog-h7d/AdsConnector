@@ -356,7 +356,7 @@ async def test_run_exec_command_defaults(test_app, monkeypatch):
         'command': '0x80000001',
         'group': 'default',
         'default': '5678',
-        'type': 'PLCTYPE_INT'
+        'type': 'PLCTYPE_REAL'
     }])
 
     called = 0
@@ -366,6 +366,7 @@ async def test_run_exec_command_defaults(test_app, monkeypatch):
         called += 1
         assert command == '0x80000001'
         assert group in ('345', '346', '347')
+        assert value_type == 'PLCTYPE_REAL'
         assert value == "1.0"
 
     monkeypatch.setattr(adscon.connector.AdsConnector, 'send_ads_write_command', mock_send_write)

@@ -284,3 +284,93 @@ async def test_check_exec_command_default(test_app, monkeypatch):
 
     assert result.status_code == 200
     assert called
+
+
+@pytest.mark.asyncio
+async def test_run_exec_command(test_app, monkeypatch):
+    monkeypatch.setattr(config_manager.ConfigManager, 'get_config_file_path', mock_get_file_path)
+    controller.config = config_manager.ConfigManager()
+
+    await controller.config.save_entry('writecommands', [{
+        'identifier': '1234',
+        'command': '0x80000001',
+        'group': '123',
+        'default': '5678',
+        'type': 'PLCTYPE_INT'
+    }])
+
+    called = False
+
+    def mock_send_write(_, command, group, value_type, value):
+        nonlocal called
+        called = True
+        assert command == '0x80000001'
+        assert group == '123'
+        assert value == '1'
+
+    monkeypatch.setattr(adscon.connector.AdsConnector, 'send_ads_write_command', mock_send_write)
+
+    result = await test_app.get('/command/exec/run/1234/1/')
+
+    assert result.status_code == 200
+    assert called
+
+
+@pytest.mark.asyncio
+async def test_run_exec_command_default(test_app, monkeypatch):
+    monkeypatch.setattr(config_manager.ConfigManager, 'get_config_file_path', mock_get_file_path)
+    controller.config = config_manager.ConfigManager()
+
+    await controller.config.save_entry('writecommands', [{
+        'identifier': '1234',
+        'command': '0x80000001',
+        'group': 'default',
+        'default': '5678',
+        'type': 'PLCTYPE_INT'
+    }])
+
+    called = False
+
+    def mock_send_write(_, command, group, value_type, value):
+        nonlocal called
+        called = True
+        assert command == '0x80000001'
+        assert group == '345'
+        assert value == 'abc'
+
+    monkeypatch.setattr(adscon.connector.AdsConnector, 'send_ads_write_command', mock_send_write)
+
+    result = await test_app.get('/command/exec/run/1234/abc/?groups=345')
+
+    assert result.status_code == 200
+    assert called
+
+
+@pytest.mark.asyncio
+async def test_run_exec_command_defaults(test_app, monkeypatch):
+    monkeypatch.setattr(config_manager.ConfigManager, 'get_config_file_path', mock_get_file_path)
+    controller.config = config_manager.ConfigManager()
+
+    await controller.config.save_entry('writecommands', [{
+        'identifier': '1234',
+        'command': '0x80000001',
+        'group': 'default',
+        'default': '5678',
+        'type': 'PLCTYPE_INT'
+    }])
+
+    called = 0
+
+    def mock_send_write(_, command, group, value_type, value):
+        nonlocal called
+        called += 1
+        assert command == '0x80000001'
+        assert group in ('345', '346', '347')
+        assert value == "1.0"
+
+    monkeypatch.setattr(adscon.connector.AdsConnector, 'send_ads_write_command', mock_send_write)
+
+    result = await test_app.get('/command/exec/run/1234/1.0/?groups=345,346,347')
+
+    assert result.status_code == 200
+    assert called == 3

@@ -111,3 +111,22 @@ async def check_exec_command(identifier: str):
             return {'data': data}
 
     quart.abort(404)
+
+
+@exec_commands_page.route('run/<identifier>/<value>/', methods=['GET'])
+async def run_command(identifier: str, value: str):
+    commands = await config.get_config_value('writecommands')
+    results = {}
+    for command in commands:
+        if command['identifier'] == identifier:
+            groups = [command['group'], ]
+            if groups[0] == 'default':
+                groups = quart.request.args.get("groups").split(",")
+
+            for group in groups:
+                data = connection.send_ads_write_command(command['command'], group, command['type'], value)
+                results[group] = data
+
+            return results
+
+    quart.abort(404)

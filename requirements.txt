@@ -1,2 +1,2 @@
 quart
-pyads~=3.3.9
+pyads~=3.4.0
